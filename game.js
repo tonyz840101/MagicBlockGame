@@ -42,12 +42,18 @@ var answer = []
 var hole
 var win
 var moves
+var repeater
+var started
+var timestamp
 
 function initBoard(blocks, ans) {
     answer = ans
     win = false
     hole = { x: 2, y: 2 }
     moves = 0
+    repeater = 1
+    started = false
+
     for (let x = 0; x < boardWidth; x++) {
         board[x] = []
         for (let y = 0; y < boardWidth; y++) {
@@ -61,28 +67,105 @@ function initBoard(blocks, ans) {
 }
 
 
+document.addEventListener("keyup", (e) => {
+    const key = e.code
+    // console.log(key)
+    if (keyHandler[key]) {
+        keyHandler[key](true)
+    }
+}, false);
+
 document.addEventListener("keydown", (e) => {
-    const key = e.key
+    const key = e.code
+    // console.log(key)
     if (keyHandler[key]) {
         keyHandler[key](false)
     }
 }, false);
 
-const keyHandler = {
-    w: (v) => moveUp(v), //W
-    s: (v) => moveDown(v), //S
-    a: (v) => moveLeft(v), //A
-    d: (v) => moveRight(v), //D
-    ArrowUp: (v) => moveUp(v), //A_UP
-    ArrowDown: (v) => moveDown(v), //A_DOWN
-    ArrowLeft: (v) => moveLeft(v), //A_LEFT
-    ArrowRight: (v) => moveRight(v), //A_RIGHT
+const keyHandler =
+    (() => {
+        while (1) {
+            let setting = prompt('control style?\n==> 1 move blank\n==> 2 fill blank\n==> 3 multi move with 1\n==> 4 multi move with 2')
+            switch (setting) {
+                case '1':
+                    return ({
+                        Space: (v) => startGame(v),
+                        KeyW: (v) => moveUp(v), //W
+                        KeyS: (v) => moveDown(v), //S
+                        KeyA: (v) => moveLeft(v), //A
+                        KeyD: (v) => moveRight(v), //D
+                        ArrowUp: (v) => moveUp(v), //A_UP
+                        ArrowDown: (v) => moveDown(v), //A_DOWN
+                        ArrowLeft: (v) => moveLeft(v), //A_LEFT
+                        ArrowRight: (v) => moveRight(v), //A_RIGHT
+                    })
+                case '2':
+                    return ({
+                        Space: (v) => startGame(v),
+                        KeyW: (v) => moveDown(v), //W
+                        KeyS: (v) => moveUp(v), //S
+                        KeyA: (v) => moveRight(v), //A
+                        KeyD: (v) => moveLeft(v), //D
+                        ArrowUp: (v) => moveDown(v), //A_UP
+                        ArrowDown: (v) => moveUp(v), //A_DOWN
+                        ArrowLeft: (v) => moveRight(v), //A_LEFT
+                        ArrowRight: (v) => moveLeft(v), //A_RIGHT
+                    })
+                case '3':
+                    return ({
+                        Space: (v) => startGame(v),
+                        KeyW: (v) => repeatMove(moveUp, v), //W
+                        KeyS: (v) => repeatMove(moveDown, v), //S
+                        KeyA: (v) => repeatMove(moveLeft, v), //A
+                        KeyD: (v) => repeatMove(moveRight, v), //D
+                        ArrowUp: (v) => repeatMove(moveUp, v), //A_UP
+                        ArrowDown: (v) => repeatMove(moveDown, v), //A_DOWN
+                        ArrowLeft: (v) => repeatMove(moveLeft, v), //A_LEFT
+                        ArrowRight: (v) => repeatMove(moveRight, v), //A_RIGHT
+                        1: () => { repeater = 1 },
+                        2: () => { repeater = 2 },
+                        3: () => { repeater = 3 },
+                        4: () => { repeater = 4 },
+                    })
+                case '4':
+                    return ({
+                        Space: (v) => startGame(v),
+                        KeyW: (v) => repeatMove(moveDown, v), //W
+                        KeyS: (v) => repeatMove(moveUp, v), //S
+                        KeyA: (v) => repeatMove(moveRight, v), //A
+                        KeyD: (v) => repeatMove(moveLeft, v), //D
+                        ArrowUp: (v) => repeatMove(moveDown, v), //A_UP
+                        ArrowDown: (v) => repeatMove(moveUp, v), //A_DOWN
+                        ArrowLeft: (v) => repeatMove(moveRight, v), //A_LEFT
+                        ArrowRight: (v) => repeatMove(moveLeft, v), //A_RIGHT
+                        1: () => { repeater = 1 },
+                        2: () => { repeater = 2 },
+                        3: () => { repeater = 3 },
+                        4: () => { repeater = 4 },
+                    })
+            }
+        }
+    })()
+
+function startGame(up) {
+    if (!up || started) return
+    started = true
+    timestamp = Date.now()
+    console.log('start')
+    render()
 }
 
+function repeatMove(move, v) {
+    for (let i = 0; i < repeater; i++) {
+        move()
+    }
+    repeater = 1
+}
 
-function moveUp() {
+function moveUp(up) {
     // console.log('moveUp', hole)
-    if (hole.y === 0 || win) return
+    if (up || !started || win || hole.y === 0) return
     let currY = hole.y
     let currX = hole.x
     hole.y--
@@ -92,9 +175,9 @@ function moveUp() {
     afterMove()
 }
 
-function moveDown() {
+function moveDown(up) {
     // console.log('moveDown', hole)
-    if (hole.y === 4 || win) return
+    if (up || !started || win || hole.y === 4) return
     let currY = hole.y
     let currX = hole.x
     hole.y++
@@ -104,9 +187,9 @@ function moveDown() {
     afterMove()
 }
 
-function moveLeft() {
+function moveLeft(up) {
     // console.log('moveLeft', hole)
-    if (hole.x === 0 || win) return
+    if (up || !started || win || hole.x === 0) return
     let currY = hole.y
     let currX = hole.x
     hole.x--
@@ -116,9 +199,9 @@ function moveLeft() {
     afterMove()
 }
 
-function moveRight() {
+function moveRight(up) {
     // console.log('moveRight', hole)
-    if (hole.x === 4 || win) return
+    if (up || !started || win || hole.x === 4) return
     let currY = hole.y
     let currX = hole.x
     hole.x++
@@ -130,7 +213,9 @@ function moveRight() {
 
 function afterMove() {
     moves++
-    console.log('step:', moves)
+    if (moves > 0 && moves % 10 === 0) {
+        console.log(`${moves} steps used`)
+    }
     checkAnswer()
     render()
 }
@@ -244,17 +329,23 @@ function checkAnswer() {
             }
         }
     }
-    if (checkWin) console.log('win!! congrat.')
+    if (checkWin) {
+        console.log('| Finished!')
+        console.log(`| ${((Date.now() - timestamp) / 1000).toFixed(2)} second(s)`)
+        console.log(`| total ${moves} steps used`)
+    }
     win = checkWin
 }
 
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawGrid()
-    drawBlock()
     drawAnswer()
+    if (!started) return
+    drawBlock()
 }
 
 
 initBoard(createNewCudes(), createAnswer())
 resizeCanvas()
+console.log('release Space key to start')
