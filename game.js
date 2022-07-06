@@ -124,10 +124,10 @@ const keyHandler =
                         ArrowDown: (v) => repeatMove(moveDown, v), //A_DOWN
                         ArrowLeft: (v) => repeatMove(moveLeft, v), //A_LEFT
                         ArrowRight: (v) => repeatMove(moveRight, v), //A_RIGHT
-                        1: () => { repeater = 1 },
-                        2: () => { repeater = 2 },
-                        3: () => { repeater = 3 },
-                        4: () => { repeater = 4 },
+                        Digit1: () => { repeater = 1 },
+                        Digit2: () => { repeater = 2 },
+                        Digit3: () => { repeater = 3 },
+                        Digit4: () => { repeater = 4 },
                     })
                 case '2':
                     return ({
@@ -140,10 +140,10 @@ const keyHandler =
                         ArrowDown: (v) => repeatMove(moveUp, v), //A_DOWN
                         ArrowLeft: (v) => repeatMove(moveRight, v), //A_LEFT
                         ArrowRight: (v) => repeatMove(moveLeft, v), //A_RIGHT
-                        1: () => { repeater = 1 },
-                        2: () => { repeater = 2 },
-                        3: () => { repeater = 3 },
-                        4: () => { repeater = 4 },
+                        Digit1: () => { repeater = 1 },
+                        Digit2: () => { repeater = 2 },
+                        Digit3: () => { repeater = 3 },
+                        Digit4: () => { repeater = 4 },
                     })
             }
         }
