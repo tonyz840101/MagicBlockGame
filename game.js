@@ -86,33 +86,34 @@ document.addEventListener("keydown", (e) => {
 const keyHandler =
     (() => {
         while (1) {
-            let setting = prompt('control style?\n==> 1 move blank\n==> 2 fill blank\n==> 3 multi move with 1\n==> 4 multi move with 2')
+            // let setting = prompt('control style?\n==> 1 move blank\n==> 2 fill blank\n==> 3 multi move with 1\n==> 4 multi move with 2')
+            let setting = prompt('control style?\n==> 1 move blank\n==> 2 fill blank\n')
             switch (setting) {
+                // case '1':
+                //     return ({
+                //         Space: (v) => startGame(v),
+                //         KeyW: (v) => moveUp(v), //W
+                //         KeyS: (v) => moveDown(v), //S
+                //         KeyA: (v) => moveLeft(v), //A
+                //         KeyD: (v) => moveRight(v), //D
+                //         ArrowUp: (v) => moveUp(v), //A_UP
+                //         ArrowDown: (v) => moveDown(v), //A_DOWN
+                //         ArrowLeft: (v) => moveLeft(v), //A_LEFT
+                //         ArrowRight: (v) => moveRight(v), //A_RIGHT
+                //     })
+                // case '2':
+                //     return ({
+                //         Space: (v) => startGame(v),
+                //         KeyW: (v) => moveDown(v), //W
+                //         KeyS: (v) => moveUp(v), //S
+                //         KeyA: (v) => moveRight(v), //A
+                //         KeyD: (v) => moveLeft(v), //D
+                //         ArrowUp: (v) => moveDown(v), //A_UP
+                //         ArrowDown: (v) => moveUp(v), //A_DOWN
+                //         ArrowLeft: (v) => moveRight(v), //A_LEFT
+                //         ArrowRight: (v) => moveLeft(v), //A_RIGHT
+                //     })
                 case '1':
-                    return ({
-                        Space: (v) => startGame(v),
-                        KeyW: (v) => moveUp(v), //W
-                        KeyS: (v) => moveDown(v), //S
-                        KeyA: (v) => moveLeft(v), //A
-                        KeyD: (v) => moveRight(v), //D
-                        ArrowUp: (v) => moveUp(v), //A_UP
-                        ArrowDown: (v) => moveDown(v), //A_DOWN
-                        ArrowLeft: (v) => moveLeft(v), //A_LEFT
-                        ArrowRight: (v) => moveRight(v), //A_RIGHT
-                    })
-                case '2':
-                    return ({
-                        Space: (v) => startGame(v),
-                        KeyW: (v) => moveDown(v), //W
-                        KeyS: (v) => moveUp(v), //S
-                        KeyA: (v) => moveRight(v), //A
-                        KeyD: (v) => moveLeft(v), //D
-                        ArrowUp: (v) => moveDown(v), //A_UP
-                        ArrowDown: (v) => moveUp(v), //A_DOWN
-                        ArrowLeft: (v) => moveRight(v), //A_LEFT
-                        ArrowRight: (v) => moveLeft(v), //A_RIGHT
-                    })
-                case '3':
                     return ({
                         Space: (v) => startGame(v),
                         KeyW: (v) => repeatMove(moveUp, v), //W
@@ -128,7 +129,7 @@ const keyHandler =
                         3: () => { repeater = 3 },
                         4: () => { repeater = 4 },
                     })
-                case '4':
+                case '2':
                     return ({
                         Space: (v) => startGame(v),
                         KeyW: (v) => repeatMove(moveDown, v), //W
@@ -158,7 +159,7 @@ function startGame(up) {
 
 function repeatMove(move, v) {
     for (let i = 0; i < repeater; i++) {
-        move()
+        move(v)
     }
     repeater = 1
 }
