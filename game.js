@@ -32,11 +32,10 @@ function resizeCanvas() {
     scaledUnit = unit * scale
 
     edge = scaledUnit * boardWidth
-    drawGrid()
+    render()
 }
 
 window.addEventListener('resize', resizeCanvas)
-resizeCanvas()
 
 var board = []
 var answer = []
@@ -258,4 +257,4 @@ function render() {
 
 
 initBoard(createNewCudes(), createAnswer())
-render()
+resizeCanvas()
